@@ -1,4 +1,12 @@
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.io.FileReader;
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.List;
 import java.util.Stack;
+
 
 public class Main {
     public static void main(String[] args) {
@@ -15,9 +23,21 @@ public class Main {
 
 
         // Questao 3
-        double [] faturamentoMensal = {13.2,12.3,14.5,19.1,23.1,23.9,22.2,14.3,17.8,9.1,0.0,0.0,5.2};// dados teste
-        System.out.println("Questao 3 ");
 
+        Faturamento [] faturamentoMensal = new Faturamento[30];
+        Gson gson = new Gson();
+        try(FileReader reader = new FileReader("/Users/davimaia/Downloads/dados.json")){
+            Type listType  = new TypeToken<List<Faturamento>>(){}.getType();
+            List<Faturamento> lista = gson.fromJson(reader, listType);
+            for (int i = 0; i < faturamentoMensal.length; i++) {
+                faturamentoMensal[i] = lista.get(i);
+            }
+
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println("Questao 3 ");
         questao3(faturamentoMensal);
         System.out.println("---------");
 
@@ -64,27 +84,27 @@ public class Main {
         return "O numero " + numero + " está presente na sequencia de fibonnacci";
     }
 
-    public static void questao3(double [] faturamento){
+    public static void questao3(Faturamento [] faturamento){
         double valorMax = 0;
-        double valorMin = faturamento[0];
+        double valorMin = faturamento[0].getValor();
         double faturamentoMedioDiario = 0;
         int qtdDiasTotal = 0;
         int qtdDiasFaturamentoSuperior = 0;
 
         for (int i = 0; i < faturamento.length; i++){
-            if (valorMax < faturamento[i]){
-                valorMax = faturamento[i];
+            if (valorMax < faturamento[i].getValor()){
+                valorMax = faturamento[i].getValor();
             }
-            if (valorMin > faturamento[i] && faturamento[i] != 0.0){
-                valorMin = faturamento[i];
+            if (valorMin > faturamento[i].getValor() && faturamento[i].getValor() != 0.0){
+                valorMin = faturamento[i].getValor();
             }
-            faturamentoMedioDiario = faturamentoMedioDiario + faturamento[i];
+            faturamentoMedioDiario = faturamentoMedioDiario + faturamento[i].getValor();
             qtdDiasTotal++;
         }
         faturamentoMedioDiario = faturamentoMedioDiario / qtdDiasTotal;
 
         for (int i = 0; i < faturamento.length; i++){
-            if (faturamento[i] > faturamentoMedioDiario){
+            if (faturamento[i].getValor() > faturamentoMedioDiario){
                 qtdDiasFaturamentoSuperior++;
             }
         }
@@ -124,7 +144,7 @@ public class Main {
     }
 
 
-    }
+}
 
 
 
